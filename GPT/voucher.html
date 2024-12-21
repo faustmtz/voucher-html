@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Voucher - Tour Martinez</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+            color: #333;
+        }
+
+        header {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header img {
+            height: 60px;
+        }
+
+        h1 {
+            margin: 10px 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            color: #333;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="vazada-fb.png" alt="Logo Tour Martinez">
+        <h1>Gerador de Voucher</h1>
+    </header>
+
+    <div class="container">
+        <form id="voucherForm">
+            <label for="hotel">Hotel/Pousada:</label>
+            <input type="text" id="hotel" name="hotel" required>
+
+            <label for="apartamento">Número do Apartamento:</label>
+            <input type="text" id="apartamento" name="apartamento" required>
+
+            <label for="cliente">Cliente:</label>
+            <input type="text" id="cliente" name="cliente" required>
+
+            <label for="numero">Número do Cliente:</label>
+            <input type="text" id="numero" name="numero" required>
+
+            <label for="roteiro">Roteiro:</label>
+            <input type="text" id="roteiro" name="roteiro" required>
+
+            <label for="data">Data:</label>
+            <input type="date" id="data" name="data" required>
+
+            <label for="horario">Horário:</label>
+            <input type="time" id="horario" name="horario" required>
+
+            <label for="valor">Valor Total (R$):</label>
+            <input type="number" id="valor" name="valor" required>
+
+            <label for="observacoes">Observações:</label>
+            <textarea id="observacoes" name="observacoes" rows="4"></textarea>
+
+            <button type="button" onclick="gerarPDF()">Gerar Voucher</button>
+        </form>
+    </div>
+
+    <footer>
+        © 2024 Tour Martinez - CNPJ: 47.779.831/0001-77
+    </footer>
+
+    <script>
+        async function gerarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF("p", "mm", "a4");
+
+            // Pegando os dados do formulário
+            const hotel = document.getElementById('hotel').value;
+            const apartamento = document.getElementById('apartamento').value;
+            const cliente = document.getElementById('cliente').value;
+            const numero = document.getElementById('numero').value;
+            const roteiro = document.getElementById('roteiro').value;
+            const data = document.getElementById('data').value;
+            const horario = document.getElementById('horario').value;
+            const valor = document.getElementById('valor').value;
+            const observacoes = document.getElementById('observacoes').value;
+
+            // Configurações do layout do PDF
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const centerX = pageWidth / 2;
+
+            // Cabeçalho
+            doc.setFillColor(0, 123, 255);
+            doc.rect(0, 0, pageWidth, 20, 'F');
+            doc.setFontSize(16);
+            doc.setFont('Helvetica', 'bold');
+            doc.setTextColor(255, 255, 255);
+            doc.text('Voucher de Passeio - Tour Martinez', centerX, 12, { align: 'center' });
+
+            // Adicionando faixas para cada seção
+            doc.setFillColor(230, 230, 230);
+            doc.rect(0, 25, pageWidth, 10, 'F');
+            doc.setFontSize(12);
+            doc.setFont('Helvetica', 'bold');
+            doc.setTextColor(50, 50, 50);
+            doc.text('Informações do Cliente', 10, 32);
+
+            doc.setFont('Helvetica', 'normal');
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Cliente: ${cliente}`, 10, 42);
+            doc.text(`Número do Cliente: ${numero}`, 10, 50);
+            doc.text(`Hotel/Pousada: ${hotel}`, 10, 58);
+            doc.text(`Apartamento: ${apartamento}`, 10, 66);
+
+            doc.setFillColor(230, 230, 230);
+            doc.rect(0, 75, pageWidth, 10, 'F');
+            doc.setFont('Helvetica', 'bold');
+            doc.setTextColor(50, 50, 50);
+            doc.text('Detalhes do Passeio', 10, 82);
+
+            doc.setFont('Helvetica', 'normal');
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Roteiro: ${roteiro}`, 10, 92);
+            doc.text(`Data: ${data}`, 10, 100);
+            doc.text(`Horário: ${horario}`, 10, 108);
+            doc.text(`Valor Total: R$ ${valor}`, 10, 116);
+
+            doc.setFillColor(230, 230, 230);
+            doc.rect(0, 125, pageWidth, 10, 'F');
+            doc.setFont('Helvetica', 'bold');
+            doc.setTextColor(50, 50, 50);
+            doc.text('Observações', 10, 132);
+
+            doc.setFont('Helvetica', 'normal');
+            doc.setTextColor(0, 0, 0);
+            doc.text(observacoes, 10, 142, { maxWidth: 190 });
+
+            doc.setFillColor(230, 230, 230);
+            doc.rect(0, 160, pageWidth, 10, 'F');
+            doc.setFont('Helvetica', 'bold');
+            doc.setTextColor(50, 50, 50);
+            doc.text('Políticas da Empresa', 10, 167);
+
+            doc.setFont('Helvetica', 'normal');
+            doc.setTextColor(0, 0, 0);
+            doc.text('1. A taxa de reserva não será devolvida, mas poderá ser usada como crédito.', 10, 177, { maxWidth: 190 });
+            doc.text('2. Em caso de desistência, não haverá devolução da taxa.', 10, 185, { maxWidth: 190 });
+            doc.text('3. Alterações no roteiro só serão feitas com consentimento prévio.', 10, 193, { maxWidth: 190 });
+
+            // Rodapé
+            doc.setFontSize(10);
+            doc.setFont('Helvetica', 'italic');
+            doc.setTextColor(100, 100, 100);
+            doc.text(`CNPJ: 47.779.831/0001-77`, 10, 280);
+            doc.text(`Obrigado por escolher a Tour Martinez!`, centerX, 290, { align: 'center' });
+
+            // Salvar o PDF
+            doc.save(`Voucher_${cliente}_${roteiro}.pdf`);
+        }
+    </script>
+</body>
+</html>
+
